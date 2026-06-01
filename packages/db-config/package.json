@@ -1,0 +1,26 @@
+{
+  "name": "@repo/db-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "prisma.ts",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.19.0",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@types/pg": "^8.20.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.21.0",
+    "prisma": "^7.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@repo/typescript-config": "workspace:*"
+  },
+  "exports": {
+    "./DB": "./prisma.ts"
+  }
+}

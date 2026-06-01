@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int             @id @unique @default(autoincrement())
+  name          String
+  email         String          @unique
+  password      String
+  credits       Int             @default(0)
+  createdAt     DateTime        @default(now())
+  api_keys      API_Key[]
+  conversations Conversations[]
+  transactions  Transactions[]
+}
+
+model API_Key {
+  id          String          @id @unique @default(uuid())
+  key         String          @unique
+  key_name    String
+  active      Boolean         @default(true)
+  deleted     Boolean         @default(false)
+  userId      Int
+  expires_at  DateTime
+  user        User            @relation(fields: [userId], references: [id])
+  generations Conversations[]
+}
+
+model Companies {
+  id        Int      @id @unique @default(autoincrement())
+  name      String
+  website   String
+  createdAt DateTime @default(now())
+  models    Models[]
+}
+
+model Providers {
+  id             String           @id @unique @default(uuid())
+  name           String
+  website        String
+  createdAt      DateTime         @default(now())
+  providerModels ModelProviders[]
+}
+
+model Models {
+  id             String           @id @unique @default(uuid())
+  name           String
+  companyId      Int
+  modelProviders ModelProviders[]
+  company        Companies        @relation(fields: [companyId], references: [id])
+}
+
+model ModelProviders {
+  id               String          @id @unique @default(uuid())
+  modelId          String
+  providerId       String
+  inputToken_cost  Int
+  outputToken_cost Int
+  maxOutput        Int
+  model            Models          @relation(fields: [modelId], references: [id])
+  provider         Providers       @relation(fields: [providerId], references: [id])
+  generations      Conversations[]
+}
+
+model Conversations {
+  id              Int            @id @unique @default(autoincrement())
+  userId          Int
+  apiKeyId        String
+  modelProviderId String
+  input           String
+  output          String
+  inpTokenCount   Int
+  outTokenCount   Int
+  createdAt       DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  apiKey          API_Key        @relation(fields: [apiKeyId], references: [id])
+  modelProvider   ModelProviders @relation(fields: [modelProviderId], references: [id])
+}
+
+model Transactions {
+  id        Int      @id @unique @default(autoincrement())
+  userId    Int
+  amount    Int
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
