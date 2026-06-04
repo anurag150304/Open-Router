@@ -1,15 +1,10 @@
 import { Elysia } from "elysia";
 import { AuthModel } from "./model.js";
 import { Auth } from "./service.js";
-import { jwt } from "@elysia/jwt";
+import { jwtPlugin } from "../../config/jwt.config.js";
 
 export const auth = new Elysia({ prefix: "auth" })
-  .use(
-    jwt({
-      name: "jwt",
-      secret: process.env.JWT_SECRET!,
-    }),
-  )
+  .use(jwtPlugin)
   .post(
     "sign-up",
     async ({ body }) => {

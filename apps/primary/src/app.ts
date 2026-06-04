@@ -2,17 +2,18 @@ import { Elysia } from "elysia";
 import { node } from "@elysia/node";
 import { auth as AuthRoute } from "./modules/auth/index.js";
 import { MyError } from "./types/error.type.js";
+import { apiKey } from "./modules/api_key/index.js";
 
-const app = new Elysia({ adapter: node() })
+new Elysia({ adapter: node() })
   .get("/", () => "Hello Elysia")
   .use(AuthRoute)
+  .use(apiKey)
   .error({ MY_ERROR: MyError })
   .onError(({ code, error, status }) => {
-    console.log(code);
     return code === "MY_ERROR"
       ? status(error.status, {
-          message: error.message,
-        })
+        message: error.message,
+      })
       : error;
   })
   .listen(3000, ({ hostname, port }) => {

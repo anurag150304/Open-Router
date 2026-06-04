@@ -17,6 +17,7 @@
     "@elysia/node": "^1.4.6",
     "@sinclair/typebox": "^0.34.49",
     "bcrypt": "^6.0.0",
+    "crypto": "^1.0.1",
     "elysia": "^1.4.28",
     "openapi-types": "^12.1.3"
   },

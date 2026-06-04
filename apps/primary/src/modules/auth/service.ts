@@ -1,5 +1,5 @@
 import { MyError } from "../../types/error.type.js";
-import { comparePasswrod, hashPassword } from "../utils/index.js";
+import { comparePasswrod, hashPassword } from "../../utils/index.js";
 import type { AuthModel } from "./model.js";
 import { prisma as DB } from "@repo/db-config/DB";
 
