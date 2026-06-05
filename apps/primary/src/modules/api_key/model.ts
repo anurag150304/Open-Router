@@ -1,4 +1,5 @@
 import { t, type UnwrapSchema } from "elysia";
+import { prisma as DB } from "@repo/db-config/DB"
 
 export const API_Model = {
     keyCreationBody: t.Object({
@@ -7,18 +8,28 @@ export const API_Model = {
     }),
     keyCreationResopnse: t.Object({
         message: t.String(),
-        key: t.Union([t.String({ minLength: 50 }), t.Null()])
+        key: t.Union([t.String(), t.Null()])
     }),
     disableKeyBody: t.Object({
         keyName: t.String({ error: "Key name is required!" }),
         key: t.String({
-            error: "Key is required!",
-            minLength: 50
+            error: "Key is required!"
         })
     }),
     disableKeyResponse: t.Object({
         message: t.String(),
-        key: t.String()
+        key: t.Union([t.String(), t.Null()])
+    }),
+    getAllUserKeysResponse: t.Object({
+        message: t.String(),
+        keys: t.Array(t.Object({
+            id: t.Number(),
+            key_name: t.String(),
+            key: t.String(),
+            active: t.Boolean(),
+            userId: t.Number(),
+            expires_at: t.Date()
+        }))
     })
 }
 

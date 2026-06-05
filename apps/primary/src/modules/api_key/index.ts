@@ -15,7 +15,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
     })
     .post("create", async ({ body, userId, set }) => {
         if (!userId) {
-            set.status = 401;
+            set.status = "Unauthorized";
             return {
                 message: "Unauthorized",
                 key: null
@@ -26,7 +26,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         const key = await API.checkKeyExistence({ userId, keyName });
 
         if (key) {
-            set.status = 409;
+            set.status = "Conflict";
             return {
                 message: `Key with name: ${keyName} already exists. Try to make unique name`,
                 key
@@ -34,7 +34,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         }
 
         const generatedKey = await API.createAPIKey({ keyName, expiresOn, userId });
-        set.status = 201;
+        set.status = "Created";
         return {
             message: "Key generated sucessfully",
             key: generatedKey
@@ -43,9 +43,9 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         body: API_Model.keyCreationBody,
         response: API_Model.keyCreationResopnse
     })
-    .post("disable", async ({ body, userId, set }) => {
+    .put("disable", async ({ body, userId, set }) => {
         if (!userId) {
-            set.status = 401;
+            set.status = "Unauthorized";
             return {
                 message: "Unauthorized",
                 key: null
@@ -56,21 +56,42 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         const keyExists = await API.checkKeyExistence({ keyName, userId });
 
         if (!keyExists) {
-            set.status = 404;
+            set.status = "Not Found";
             return {
                 message: "key not found!",
                 key: null
             }
         }
 
-        await API.disableKey({ keyName, key, userId })
-        set.status = 200;
+        const res = await API.disableKey({ keyName, key, userId });
+        if (!res) {
+            set.status = "Conflict";
+            return {
+                message: "Failed to disable the key. Please try again later.",
+                key: null
+            }
+        }
+
+        set.status = "OK";
         return {
             message: "Key sucessfully disabled",
-            key
+            key: res
         }
 
     }, {
         body: API_Model.disableKeyBody,
         response: API_Model.disableKeyResponse
+    })
+    .get("all-keys", async ({ userId, set }) => {
+        if (!userId) {
+            set.status = "Unauthorized";
+            return {
+                message: "Unauthorized",
+                key: null
+            }
+        }
+
+        const allUserKey = await API
+    }, {
+        response: API_Model.getAllUserKeysResponse
     })

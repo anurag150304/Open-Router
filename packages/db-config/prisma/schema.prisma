@@ -21,12 +21,12 @@ model User {
 
 model API_Key {
   id          String          @id @unique @default(uuid())
-  key         String          @unique
   key_name    String
+  key         String          @unique
   active      Boolean         @default(true)
   deleted     Boolean         @default(false)
   userId      Int
-  expires_at  DateTime
+  expires_at  String
   user        User            @relation(fields: [userId], references: [id])
   generations Conversations[]
 }

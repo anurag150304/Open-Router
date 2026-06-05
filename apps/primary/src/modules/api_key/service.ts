@@ -29,7 +29,7 @@ export abstract class API {
 
     static async disableKey({ keyName, key, userId }: API_Model["disableKeyBody"] & { userId: number }) {
         try {
-            await DB.aPI_Key.update({
+            const updatedKey = await DB.aPI_Key.update({
                 where: {
                     key_name: keyName,
                     key,
@@ -37,9 +37,25 @@ export abstract class API {
                 },
                 data: { active: false }
             });
-            return true;
+            return updatedKey.key;
         } catch (err) {
             throw err;
         }
+    }
+
+    static async getAllUserKeys({ userId }: { userId: number }) {
+        const keys = DB.aPI_Key.findMany({
+            where: {
+                userId,
+                deleted: false
+            },
+            select: {
+                id: true,
+                key_name: true,
+                key: true,
+                active: true,
+                expires_at: true
+            }
+        })
     }
 }
