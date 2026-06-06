@@ -44,7 +44,7 @@ export abstract class API {
     }
 
     static async getAllUserKeys({ userId }: { userId: number }) {
-        const keys = DB.aPI_Key.findMany({
+        return DB.aPI_Key.findMany({
             where: {
                 userId,
                 deleted: false
@@ -53,9 +53,15 @@ export abstract class API {
                 id: true,
                 key_name: true,
                 key: true,
+                userId: true,
                 active: true,
                 expires_at: true
             }
-        })
+        });
+    }
+
+    static async deleteAPIKey({ keyId }: API_Model["deleteKeyParam"]) {
+        const res = await DB.aPI_Key.updateMany({ where: { id: keyId }, data: { deleted: true } });
+        return Boolean(res.count);
     }
 }

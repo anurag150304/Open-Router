@@ -20,7 +20,6 @@
     "strict": true,
     "target": "esnext",
     "sourceMap": true,
-    "noImplicitReturns": true,
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

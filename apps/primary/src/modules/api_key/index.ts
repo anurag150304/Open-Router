@@ -1,26 +1,28 @@
 import { Elysia } from "elysia";
 import { API_Model } from "./model.js";
-import { jwtPlugin } from "../../config/jwt.config.js";
 import { API } from "./service.js";
+import { jwtPlugin } from "../../plugins/jwt.plugin.js";
 
 export const apiKey = new Elysia({ prefix: "api-key" })
     .use(jwtPlugin)
-    .resolve(async ({ cookie: { auth }, jwt }) => {
-        if (!auth) return { userId: null };
-
-        const decoded = await jwt.verify(auth.value as string)
-        if (!decoded) return { userId: null }
-
-        return { userId: Number(decoded.userId) }
-    })
-    .post("create", async ({ body, userId, set }) => {
-        if (!userId) {
+    .resolve(async ({ jwt, cookie: { auth }, set }) => {
+        if (!auth?.value) {
             set.status = "Unauthorized";
-            return {
-                message: "Unauthorized",
-                key: null
-            }
+            throw new Error("Unauthorized");
         }
+
+        const decoded = await jwt.verify(auth.value as string);
+
+        if (!decoded) {
+            set.status = "Unauthorized";
+            throw new Error("Unauthorized");
+        }
+
+        return {
+            userId: Number(decoded.userId)
+        };
+
+    }).post("/create", async ({ userId, body, set }) => {
 
         const { keyName, expiresOn } = body
         const key = await API.checkKeyExistence({ userId, keyName });
@@ -43,14 +45,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         body: API_Model.keyCreationBody,
         response: API_Model.keyCreationResopnse
     })
-    .put("disable", async ({ body, userId, set }) => {
-        if (!userId) {
-            set.status = "Unauthorized";
-            return {
-                message: "Unauthorized",
-                key: null
-            }
-        }
+    .put("/disable", async ({ userId, body, set }) => {
 
         const { keyName, key } = body
         const keyExists = await API.checkKeyExistence({ keyName, userId });
@@ -83,15 +78,31 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         response: API_Model.disableKeyResponse
     })
     .get("all-keys", async ({ userId, set }) => {
-        if (!userId) {
-            set.status = "Unauthorized";
-            return {
-                message: "Unauthorized",
-                key: null
-            }
-        }
 
-        const allUserKey = await API
+        const allUserKey = await API.getAllUserKeys({ userId });
+        set.status = "OK";
+        return { keys: allUserKey };
     }, {
         response: API_Model.getAllUserKeysResponse
+    })
+    .delete("remove-key/:keyId", async ({ params, set }) => {
+        const { keyId } = params;
+        const res = await API.deleteAPIKey({ keyId });
+        if (!res) {
+            set.status = "Conflict"
+            return {
+                message: "Something went wrong! While deleting key",
+            }
+        };
+
+        set.status = "OK";
+        return {
+            message: "Key deleted sucessfully",
+            keyId: res.key_name,
+            // key: res.key
+        };
+
+    }, {
+        params: API_Model.deleteKeyParam,
+        response: API_Model
     })

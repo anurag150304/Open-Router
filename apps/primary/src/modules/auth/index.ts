@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { AuthModel } from "./model.js";
 import { Auth } from "./service.js";
-import { jwtPlugin } from "../../config/jwt.config.js";
+import { jwtPlugin } from "../../plugins/jwt.plugin.js";
 
 export const auth = new Elysia({ prefix: "auth" })
   .use(jwtPlugin)
@@ -17,7 +17,7 @@ export const auth = new Elysia({ prefix: "auth" })
     },
     {
       body: AuthModel.signUpBody,
-      response: { 200: AuthModel.signUpResponse },
+      response: { 201: AuthModel.signUpResponse },
     },
   )
   .post(
@@ -36,6 +36,7 @@ export const auth = new Elysia({ prefix: "auth" })
 
       return {
         message: "Signed In sucessfully",
+        userId: userId.toString(),
       };
     },
     {
