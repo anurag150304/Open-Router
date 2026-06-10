@@ -22,7 +22,8 @@ export const apiKey = new Elysia({ prefix: "api-key" })
             userId: Number(decoded.userId)
         };
 
-    }).post("/create", async ({ userId, body, set }) => {
+    })
+    .post("/create", async ({ userId, body, set }) => {
 
         const { keyName, expiresOn } = body
         const key = await API.checkKeyExistence({ userId, keyName });
@@ -45,9 +46,9 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         body: API_Model.keyCreationBody,
         response: API_Model.keyCreationResopnse
     })
-    .put("/disable", async ({ userId, body, set }) => {
+    .put("/update", async ({ userId, body, set }) => {
 
-        const { keyName, key } = body
+        const { keyName, key, updateType } = body
         const keyExists = await API.checkKeyExistence({ keyName, userId });
 
         if (!keyExists) {
@@ -58,7 +59,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
             }
         }
 
-        const res = await API.disableKey({ keyName, key, userId });
+        const res = await API.updateKey({ keyName, key, userId, updateType });
         if (!res) {
             set.status = "Conflict";
             return {
@@ -69,15 +70,15 @@ export const apiKey = new Elysia({ prefix: "api-key" })
 
         set.status = "OK";
         return {
-            message: "Key sucessfully disabled",
+            message: `Key sucessfully ${updateType}d`,
             key: res
         }
 
     }, {
-        body: API_Model.disableKeyBody,
-        response: API_Model.disableKeyResponse
+        body: API_Model.updateKeyBody,
+        response: API_Model.updateKeyResponse
     })
-    .get("all-keys", async ({ userId, set }) => {
+    .get("/all", async ({ userId, set }) => {
 
         const allUserKey = await API.getAllUserKeys({ userId });
         set.status = "OK";
@@ -85,7 +86,7 @@ export const apiKey = new Elysia({ prefix: "api-key" })
     }, {
         response: API_Model.getAllUserKeysResponse
     })
-    .delete("remove-key/:keyId", async ({ params, set }) => {
+    .delete("/remove/:keyId", async ({ params, set }) => {
         const { keyId } = params;
         const res = await API.deleteAPIKey({ keyId });
         if (!res) {
@@ -98,11 +99,10 @@ export const apiKey = new Elysia({ prefix: "api-key" })
         set.status = "OK";
         return {
             message: "Key deleted sucessfully",
-            keyId: res.key_name,
-            // key: res.key
+            keyId
         };
 
     }, {
         params: API_Model.deleteKeyParam,
-        response: API_Model
+        response: API_Model.deleteKeyResponse
     })

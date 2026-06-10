@@ -9,27 +9,34 @@ export const API_Model = {
         message: t.String(),
         key: t.Union([t.String(), t.Null()])
     }),
-    disableKeyBody: t.Object({
+    updateKeyBody: t.Object({
         keyName: t.String({ error: "Key name is required!" }),
         key: t.String({
             error: "Key is required!"
-        })
+        }),
+        updateType: t.UnionEnum(["disable", "enable"])
     }),
-    disableKeyResponse: t.Object({
+    updateKeyResponse: t.Object({
         message: t.String(),
         key: t.Union([t.String(), t.Null()])
     }),
     getAllUserKeysResponse: t.Object({
         message: t.Optional(t.String()),
-        keys: t.Array(t.Any())
+        keys: t.Array(t.Object({
+            active: t.Boolean(),
+            expires_at: t.String(),
+            id: t.String(),
+            key: t.String(),
+            key_name: t.String(),
+            userId: t.Number()
+        }))
     }),
     deleteKeyParam: t.Object({
         keyId: t.String()
     }),
     deleteKeyResponse: t.Object({
         message: t.String(),
-        keyName: t.Object(t.String()),
-        key: t.Optional(t.String())
+        keyId: t.Optional(t.String())
     })
 }
 

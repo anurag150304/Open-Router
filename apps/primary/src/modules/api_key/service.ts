@@ -27,7 +27,7 @@ export abstract class API {
         }
     }
 
-    static async disableKey({ keyName, key, userId }: API_Model["disableKeyBody"] & { userId: number }) {
+    static async updateKey({ keyName, key, updateType, userId }: API_Model["updateKeyBody"] & { userId: number }) {
         try {
             const updatedKey = await DB.aPI_Key.update({
                 where: {
@@ -35,7 +35,7 @@ export abstract class API {
                     key,
                     userId
                 },
-                data: { active: false }
+                data: { active: updateType == "disable" ? false : true }
             });
             return updatedKey.key;
         } catch (err) {
