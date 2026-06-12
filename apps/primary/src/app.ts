@@ -2,12 +2,14 @@ import { Elysia } from "elysia";
 import { node } from "@elysia/node";
 import { auth as AuthRoute } from "./modules/auth/index.js";
 import { MyError } from "./types/error.type.js";
-import { apiKey } from "./modules/api_key/index.js";
+import { apiRoute } from "./modules/api_key/index.js";
+import { modelsRoute } from "./modules/models/index.js";
 
 new Elysia({ adapter: node() })
   .get("/", () => "Hello Elysia")
   .use(AuthRoute)
-  .use(apiKey)
+  .use(apiRoute)
+  .use(modelsRoute)
   .error({ MY_ERROR: MyError })
   .onError(({ code, error, status }) => {
     return code === "MY_ERROR"

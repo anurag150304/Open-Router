@@ -11,6 +11,9 @@ export const comparePasswrod = async (hashed: string, pass: string) => {
 
 const KEY_PREFIX = "sk-or-v1-";
 export const generateKey = () => {
-  const randomString = crypto.randomBytes(21).toString("base64url").slice(0, 41); // generates a 41-character string
+  const randomString = crypto
+    .randomBytes(21)
+    .toString("base64url")
+    .slice(0, 41); // generates a 41-character string
   return `${KEY_PREFIX}${randomString}`;
-}
+};
