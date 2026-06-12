@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 .env*
 node_modules/
@@ -40,10 +38,9 @@ yarn-error.log*
 
 # Prisma
 **/prisma/migrations/
-**/prisma/generated
 **/prisma/.env
 
-# generated outputs
+# Prisma generated outputs
 **/generated/
 packages/*/generated/
 
