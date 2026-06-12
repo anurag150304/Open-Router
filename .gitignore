@@ -42,3 +42,23 @@ yarn-error.log*
 **/prisma/migrations/
 **/prisma/generated
 **/prisma/.env
+
+# generated outputs
+**/generated/
+packages/*/generated/
+
+# build outputs
+dist/
+build/
+out/
+.next/
+.vercel/
+
+# caches
+.parcel-cache/
+/.turbo/
+node_modules/.cache
+
+# local env
+.env.local
+.env.*.local
