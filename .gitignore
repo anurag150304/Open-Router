@@ -40,5 +40,5 @@ yarn-error.log*
 
 # Prisma
 **/prisma/migrations/
-**/prisma/generated/
+**/prisma/generated
 **/prisma/.env

@@ -122,5 +122,4 @@ const createApiRoute = () =>
       },
     );
 
-
 export const apiRoute: any = createApiRoute();
