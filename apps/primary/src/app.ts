@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "../../.env" });
+
 import { Elysia } from "elysia";
 import { node } from "@elysia/node";
 import { auth as AuthRoute } from "./modules/auth/index.js";
