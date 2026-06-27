@@ -31,6 +31,6 @@ const createmodelRoute = () =>
       {
         response: modelSchema.allModelsResponse,
       },
-    )
+    );
 
 export const modelsRoute = createmodelRoute();
