@@ -1,4 +1,4 @@
-import { prisma } from "./client.js"
+import { prisma } from "./client.js";
 
 export const userDB = prisma.user;
 export const apiDB = prisma.aPI_Key;

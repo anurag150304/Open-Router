@@ -1,7 +1,6 @@
 import { t, type UnwrapSchema } from "elysia";
 
 export const modelSchema = {
-
   allModelsResponse: t.Object({
     models: t.Array(t.Any()),
   }),
@@ -28,13 +27,13 @@ export const modelSchema = {
     modelId: t.String({ error: "Model Id is required!" }),
     providerId: t.String({ error: "Provider Id is required!" }),
     inputToken_cost: t.Number({ error: "Input token is required!" }),
-    outputToken_cost: t.Number({ error: "Output token is required!" })
+    outputToken_cost: t.Number({ error: "Output token is required!" }),
   }),
 
   modelProviderResponse: t.Object({
     message: t.String(),
-    modelProviderId: t.String()
-  })
+    modelProviderId: t.String(),
+  }),
 };
 
 export type modelSchema = {

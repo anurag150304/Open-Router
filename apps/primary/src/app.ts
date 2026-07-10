@@ -19,8 +19,8 @@ new Elysia({ adapter: node() })
   .onError(({ code, error, status }) => {
     return code === "MY_ERROR"
       ? status(error.status, {
-        message: error.message,
-      })
+          message: error.message,
+        })
       : error;
   })
   .listen(env.PORT, ({ hostname, port }) => {

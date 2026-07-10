@@ -13,8 +13,8 @@ export const companySchema = {
 
   allCompaniesResponse: t.Object({
     message: t.String(),
-    companies: t.Array(t.Any())
-  })
+    companies: t.Array(t.Any()),
+  }),
 };
 
 export type companySchema = {

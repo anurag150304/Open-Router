@@ -32,16 +32,20 @@ const createmodelRoute = () =>
         response: modelSchema.allModelsResponse,
       },
     )
-    .post("/add-provider", async ({ body, set }) => {
-      const modelProviderId = await Models.addModelProvider(body);
-      set.status = "Created";
-      return {
-        message: "Model provider added",
-        modelProviderId: modelProviderId.id
-      }
-    }, {
-      body: modelSchema.modelProviderSchema,
-      response: modelSchema.modelProviderResponse
-    })
+    .post(
+      "/add-provider",
+      async ({ body, set }) => {
+        const modelProviderId = await Models.addModelProvider(body);
+        set.status = "Created";
+        return {
+          message: "Model provider added",
+          modelProviderId: modelProviderId.id,
+        };
+      },
+      {
+        body: modelSchema.modelProviderSchema,
+        response: modelSchema.modelProviderResponse,
+      },
+    );
 
 export const modelsRoute = createmodelRoute();

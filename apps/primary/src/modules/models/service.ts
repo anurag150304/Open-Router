@@ -13,20 +13,25 @@ export abstract class Models {
     });
   }
 
-  static async addNewModel({ name, companyId }: modelSchema['newModelBody']) {
+  static async addNewModel({ name, companyId }: modelSchema["newModelBody"]) {
     return await modelsDB.create({
       data: { name, company: { connect: { id: companyId } } },
     });
   }
 
-  static async addModelProvider({ modelId, providerId, inputToken_cost, outputToken_cost }: modelSchema['modelProviderSchema']) {
+  static async addModelProvider({
+    modelId,
+    providerId,
+    inputToken_cost,
+    outputToken_cost,
+  }: modelSchema["modelProviderSchema"]) {
     return await modelProvidersDB.create({
       data: {
         inputToken_cost,
         outputToken_cost,
         model: { connect: { id: modelId } },
-        provider: { connect: { id: providerId } }
-      }
+        provider: { connect: { id: providerId } },
+      },
     });
   }
 }
