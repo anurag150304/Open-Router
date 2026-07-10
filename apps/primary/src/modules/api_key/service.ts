@@ -1,13 +1,13 @@
 import { generateKey } from "../../utils/index.js";
 import { API_Model } from "./model.js";
-import { prisma as DB } from "@repo/db-config/DB";
+import { apiDB } from "@repo/db-config";
 
 export abstract class API {
   static async checkKeyExistence({
     keyName,
     userId,
   }: Omit<API_Model["keyCreationBody"], "expiresOn"> & { userId: number }) {
-    const existKey = await DB.aPI_Key.findFirst({
+    const existKey = await apiDB.findFirst({
       where: { key_name: keyName, userId },
     });
     return existKey?.key;
@@ -21,7 +21,7 @@ export abstract class API {
     const newKey = generateKey();
 
     try {
-      const apiKey = await DB.aPI_Key.create({
+      const apiKey = await apiDB.create({
         data: {
           key_name: keyName,
           key: newKey,
@@ -42,7 +42,7 @@ export abstract class API {
     userId,
   }: API_Model["updateKeyBody"] & { userId: number }) {
     try {
-      const updatedKey = await DB.aPI_Key.update({
+      const updatedKey = await apiDB.update({
         where: {
           key_name: keyName,
           key,
@@ -57,7 +57,7 @@ export abstract class API {
   }
 
   static async getAllUserKeys({ userId }: { userId: number }) {
-    return DB.aPI_Key.findMany({
+    return apiDB.findMany({
       where: {
         userId,
         deleted: false,
@@ -74,7 +74,7 @@ export abstract class API {
   }
 
   static async deleteAPIKey({ keyId }: API_Model["deleteKeyParam"]) {
-    const res = await DB.aPI_Key.updateMany({
+    const res = await apiDB.updateMany({
       where: { id: keyId },
       data: { deleted: true },
     });

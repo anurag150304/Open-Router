@@ -1,0 +1,29 @@
+{
+  "name": "@repo/env-config",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "anurag",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "dotenv": "^17.4.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}

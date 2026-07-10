@@ -1,6 +1,7 @@
 import { jwt } from "@elysia/jwt";
+import { env } from "@repo/env-config";
 
-export const jwtPlugin = jwt({
+export const jwtPlugin: any = jwt({
   name: "jwt",
-  secret: process.env.JWT_SECRET!,
-}) as any;
+  secret: env.JWT_SECRET,
+});

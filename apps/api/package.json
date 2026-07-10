@@ -5,15 +5,18 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b",
     "start": "node dist/app.js",
-    "dev": "tsc && node dist/app.js"
+    "dev": "tsx watch src/app.ts"
+  },
+  "dependencies": {
+    "@repo/env-config": "workspace:*"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "tsx": "^4.23.0"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.19.0"
+  "license": "ISC"
 }

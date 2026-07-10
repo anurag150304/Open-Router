@@ -2,13 +2,19 @@
   "name": "@repo/db-config",
   "version": "1.0.0",
   "description": "",
-  "main": "prisma.ts",
+  "main": "./dist/index.ts",
+  "types:": "./dist/index.d.ts",
   "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc -b"
+  },
   "keywords": [],
-  "author": "",
+  "author": "anurag",
   "license": "ISC",
-  "packageManager": "pnpm@10.19.0",
   "dependencies": {
+    "@repo/env-config": "workspace:*",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@types/pg": "^8.20.0",
@@ -21,6 +27,9 @@
     "@repo/typescript-config": "workspace:*"
   },
   "exports": {
-    "./DB": "./prisma.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

@@ -10,6 +10,11 @@ export const companySchema = {
     message: t.String(),
     companyId: t.Optional(t.String()),
   }),
+
+  allCompaniesResponse: t.Object({
+    message: t.String(),
+    companies: t.Array(t.Any())
+  })
 };
 
 export type companySchema = {

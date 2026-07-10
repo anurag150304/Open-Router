@@ -1,4 +1,4 @@
-import { prisma as DB } from "@repo/db-config/DB";
+import { companiesDB } from "@repo/db-config";
 import type { companySchema } from "./model.js";
 
 export abstract class CompanyModel {
@@ -6,6 +6,10 @@ export abstract class CompanyModel {
     name,
     website,
   }: companySchema["newCompanyBody"]) {
-    return await DB.companies.create({ data: { name, website } });
+    return await companiesDB.create({ data: { name, website } });
+  }
+
+  static async getAllCompanies() {
+    return await companiesDB.findMany({});
   }
 }

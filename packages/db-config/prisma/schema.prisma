@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -21,8 +20,8 @@ model User {
 
 model API_Key {
   id          String          @id @unique @default(uuid())
-  key_name    String
   key         String          @unique
+  key_name    String
   active      Boolean         @default(true)
   deleted     Boolean         @default(false)
   userId      Int
@@ -59,12 +58,11 @@ model ModelProviders {
   id               String          @id @unique @default(uuid())
   modelId          String
   providerId       String
-  inputToken_cost  Int
-  outputToken_cost Int
-  maxOutput        Int
+  inputToken_cost  Float
+  outputToken_cost Float
+  generations      Conversations[]
   model            Models          @relation(fields: [modelId], references: [id])
   provider         Providers       @relation(fields: [providerId], references: [id])
-  generations      Conversations[]
 }
 
 model Conversations {
@@ -77,9 +75,9 @@ model Conversations {
   inpTokenCount   Int
   outTokenCount   Int
   createdAt       DateTime       @default(now())
-  user            User           @relation(fields: [userId], references: [id])
   apiKey          API_Key        @relation(fields: [apiKeyId], references: [id])
   modelProvider   ModelProviders @relation(fields: [modelProviderId], references: [id])
+  user            User           @relation(fields: [userId], references: [id])
 }
 
 model Transactions {

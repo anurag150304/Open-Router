@@ -1,16 +1,16 @@
-import { prisma as DB } from "@repo/db-config/DB";
+import { providersDB } from "@repo/db-config";
 import type { providersSchema } from "./model.js";
 
 export abstract class ProvidersModel {
   static async getAllProviders() {
-    return await DB.providers.findMany({});
+    return await providersDB.findMany({});
   }
 
   static async addNewProvider({
     name,
     website,
   }: providersSchema["newProviderBody"]) {
-    return await DB.providers.create({
+    return await providersDB.create({
       data: { name, ...(website && { website }) },
     });
   }
