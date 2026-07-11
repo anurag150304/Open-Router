@@ -33,9 +33,6 @@ yarn-error.log*
 # turbo
 **/.turbo/
 
-# ui
-**/dist/
-
 # Prisma
 **/prisma/migrations/
 **/prisma/.env
@@ -59,3 +56,7 @@ node_modules/.cache
 # local env
 .env.local
 .env.*.local
+
+
+# ts-build
+tsconfig.tsbuildinfo
