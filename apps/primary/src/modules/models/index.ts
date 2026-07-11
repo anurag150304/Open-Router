@@ -2,7 +2,6 @@ import { Elysia } from "elysia";
 import { Models } from "./service.js";
 import { modelSchema } from "./model.js";
 
-
 export const modelsRoute = new Elysia({ prefix: "/models" })
   .post(
     "/new",
