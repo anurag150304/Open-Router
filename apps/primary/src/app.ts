@@ -16,7 +16,7 @@ const app = new Elysia({ adapter: node() })
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
-    })
+    }),
   )
   .error({ MyError })
   .onError(({ code, error, set }) => {

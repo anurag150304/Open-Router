@@ -7,7 +7,8 @@ export async function signup(payload: {
 }) {
   const { data, error } = await service.user.signup.post(payload);
   if (error) {
-    const errMsg = (error.value as any)?.message || "Signup failed. Please try again.";
+    const errMsg =
+      (error.value as any)?.message || "Signup failed. Please try again.";
     throw new Error(errMsg);
   }
   return data;
@@ -16,7 +17,8 @@ export async function signup(payload: {
 export async function signin(payload: { email: string; password: string }) {
   const { data, error } = await service.user.signin.post(payload);
   if (error) {
-    const errMsg = (error.value as any)?.message || "Signin failed. Invalid credentials.";
+    const errMsg =
+      (error.value as any)?.message || "Signin failed. Invalid credentials.";
     throw new Error(errMsg);
   }
   return data;
@@ -25,7 +27,8 @@ export async function signin(payload: { email: string; password: string }) {
 export async function getMe() {
   const { data, error } = await service.user.me.get();
   if (error) {
-    const errMsg = (error.value as any)?.message || "Failed to fetch user profile.";
+    const errMsg =
+      (error.value as any)?.message || "Failed to fetch user profile.";
     throw new Error(errMsg);
   }
   return data;

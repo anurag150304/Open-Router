@@ -90,7 +90,10 @@ export default function Signup() {
             )}
 
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label
+                htmlFor="name"
+                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+              >
                 Full Name
               </label>
               <div className="relative mt-2">
@@ -111,7 +114,10 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label
+                htmlFor="email"
+                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+              >
                 Email Address
               </label>
               <div className="relative mt-2">
@@ -132,7 +138,10 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label
+                htmlFor="password"
+                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+              >
                 Password
               </label>
               <div className="relative mt-2">

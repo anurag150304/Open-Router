@@ -57,7 +57,9 @@ export default function Dashboard() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-600 shadow-[0_0_15px_rgba(99,102,241,0.2)]" />
-            <span className="text-xl font-bold tracking-tight text-white">OpenRouter</span>
+            <span className="text-xl font-bold tracking-tight text-white">
+              OpenRouter
+            </span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -86,7 +88,9 @@ export default function Dashboard() {
       <main className="mx-auto max-w-7xl py-12 px-6">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-white">User Dashboard</h1>
-          <p className="mt-2 text-zinc-400">Manage your profile, API keys, and model usage.</p>
+          <p className="mt-2 text-zinc-400">
+            Manage your profile, API keys, and model usage.
+          </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -113,8 +117,12 @@ export default function Dashboard() {
                 <Wallet className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Available Credits</h3>
-                <p className="text-2xl font-extrabold text-white mt-1">{user.credits}</p>
+                <h3 className="text-lg font-bold text-white">
+                  Available Credits
+                </h3>
+                <p className="text-2xl font-extrabold text-white mt-1">
+                  {user.credits}
+                </p>
               </div>
             </div>
             <div className="mt-6 border-t border-zinc-800/80 pt-4 text-xs text-zinc-550">

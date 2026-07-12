@@ -40,7 +40,9 @@ export default function Signin() {
       navigate("/user/dashboard", { replace: true });
     },
     onError: (err: any) => {
-      setErrorMsg(err.message || "Something went wrong. Please check your credentials.");
+      setErrorMsg(
+        err.message || "Something went wrong. Please check your credentials.",
+      );
     },
   });
 
@@ -84,7 +86,10 @@ export default function Signin() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label
+                htmlFor="email"
+                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+              >
                 Email Address
               </label>
               <div className="relative mt-2">
@@ -107,7 +112,10 @@ export default function Signin() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <label
+                  htmlFor="password"
+                  className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+                >
                   Password
                 </label>
               </div>
