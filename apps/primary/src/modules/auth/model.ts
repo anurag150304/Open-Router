@@ -19,6 +19,20 @@ export const AuthModel = {
 
   signInResponse: t.Object({
     message: t.String(),
+    userId: t.String(),
+  }),
+
+  meResponse: t.Object({
+    user: t.Object({
+      id: t.Number(),
+      name: t.String(),
+      email: t.String(),
+      credits: t.Number(),
+    }),
+  }),
+
+  signOutResponse: t.Object({
+    message: t.String(),
   }),
 } as const;
 

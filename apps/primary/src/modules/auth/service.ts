@@ -25,4 +25,13 @@ export abstract class Auth {
     if (!isValid) throw new MyError(403, "Invalid credentials");
     return user.id.toString();
   }
+
+  static async getMe(userId: string | number) {
+    const user = await userDB.findUnique({
+      where: { id: Number(userId) },
+      select: { id: true, name: true, email: true, credits: true },
+    });
+    if (!user) throw new MyError(404, "User not found!");
+    return user;
+  }
 }

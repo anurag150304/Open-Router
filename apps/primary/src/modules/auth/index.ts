@@ -11,7 +11,7 @@ export const user = new Elysia({ prefix: "/user" })
       const { name, email, password } = body;
       const userId = await Auth.signup({ name, email, password });
       return {
-        message: "User signed up sucessfully",
+        message: "User account created sucessfully",
         userId: userId.toString(),
       };
     },
@@ -32,6 +32,7 @@ export const user = new Elysia({ prefix: "/user" })
         value,
         httpOnly: true,
         maxAge: 7 * 86_400,
+        path: "/",
       });
 
       return {
@@ -42,5 +43,36 @@ export const user = new Elysia({ prefix: "/user" })
     {
       body: AuthModel.signInBody,
       response: { 200: AuthModel.signInResponse },
+    },
+  )
+  .get(
+    "/me",
+    async ({ jwt, cookie: { auth } }) => {
+      if (!auth?.value) {
+        throw new Error("Unauthorized");
+      }
+      const decoded = await jwt.verify(auth.value as string);
+      if (!decoded) {
+        throw new Error("Unauthorized");
+      }
+      const userDetails = await Auth.getMe(decoded.userId as string);
+      return {
+        user: userDetails,
+      };
+    },
+    {
+      response: { 200: AuthModel.meResponse },
+    },
+  )
+  .post(
+    "/signout",
+    async ({ cookie: { auth } }) => {
+      auth?.remove();
+      return {
+        message: "Signed out successfully",
+      };
+    },
+    {
+      response: { 200: AuthModel.signOutResponse },
     },
   );
