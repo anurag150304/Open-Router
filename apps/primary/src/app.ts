@@ -45,8 +45,8 @@ const app = new Elysia({ adapter: node() })
   .use(modelsRoute)
   .use(providersRoute)
   .use(companiesRoute)
-  .listen(env.PORT, ({ hostname, port }) => {
-    console.log(`Server is running at ${hostname}:${port}`);
+  .listen(env.PRIMARY_PORT, ({ hostname, port }) => {
+    console.log(`Primary server is running at ${hostname}:${port}`);
   });
 
 export type App = typeof app;

@@ -8,7 +8,8 @@ dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
 dotenv.config({ path: path.resolve(process.cwd(), "../../.env") });
 
 const envSchema = z.object({
-  PORT: z.coerce.number().int().min(1).max(65_535).default(3001),
+  PRIMARY_PORT: z.coerce.number().int().min(1).max(65_535).default(3001),
+  API_PORT: z.coerce.number().int().min(1).max(65_535).default(3000),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
