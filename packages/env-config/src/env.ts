@@ -20,7 +20,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   GOOGLE_CLOUD_PROJECT: z.string().default("open-router-502315"),
   GOOGLE_CLOUD_LOCATION: z.string().default("asia-northeast1"),
-  GOOGLE_GENAI_USE_VERTEXAI: z.string().transform((val) => val.toLowerCase() === "true").default(true),
+  GOOGLE_GENAI_USE_VERTEXAI: z
+    .string()
+    .transform((val) => val.toLowerCase() === "true")
+    .default(true),
 });
 
 export type Env = z.infer<typeof envSchema>;

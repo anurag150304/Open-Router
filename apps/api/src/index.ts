@@ -18,44 +18,51 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
     }),
   )
 
-  .use(jwt({
-    name: "jwt",
-    secret: env.JWT_SECRET,
-    exp: "7d",
-  }))
+  .use(
+    jwt({
+      name: "jwt",
+      secret: env.JWT_SECRET,
+      exp: "7d",
+    }),
+  )
   .use(bearer())
   .get("/", () => "Welcome to the Open-ROuter API server")
-  .post("/chat/completions", async ({ bearer, body, set }) => {
-    try {
-      const res = await CompletionsService.validateKey({ authorization: bearer as string });
+  .post(
+    "/chat/completions",
+    async ({ bearer, body, set }) => {
+      try {
+        const res = await CompletionsService.validateKey({
+          authorization: bearer as string,
+        });
 
-      if (!res) {
-        set.status = "Unauthorized";
-        return { message: "Invalid key! Please generate a valid key." };
+        if (!res) {
+          set.status = "Unauthorized";
+          return { message: "Invalid key! Please generate a valid key." };
+        }
+      } catch (err) {
+        console.error(err);
+        throw new MyError(
+          401,
+          "Something went wrong! While validating your key",
+        );
       }
 
-    } catch (err) {
-      console.error(err);
-      throw new MyError(401, "Something went wrong! While validating your key");
-    }
-
-    try {
-      await CompletionsService.LLMCall(body);
-    } catch (err) {
-
-    }
-    set.status = "OK";
-    return {
-      message: "Testing"
-    }
-
-  }, {
-    headers: completionsSchema.headerSchema,
-    body: completionsSchema.bodySchema,
-    // response: {
-    //   200: completionsSchema.completionResponseSchema
-    // }
-  })
+      try {
+        await CompletionsService.LLMCall(body);
+      } catch (err) {}
+      set.status = "OK";
+      return {
+        message: "Testing",
+      };
+    },
+    {
+      headers: completionsSchema.headerSchema,
+      body: completionsSchema.bodySchema,
+      // response: {
+      //   200: completionsSchema.completionResponseSchema
+      // }
+    },
+  )
   .error({ MyError })
   .onError(({ code, error, set }) => {
     if (code === "MyError") {
