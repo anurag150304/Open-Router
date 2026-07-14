@@ -30,6 +30,7 @@
     "tsx": "^4.23.0"
   },
   "exports": {
-    "./app": "./src/app.ts"
+    "./app": "./src/app.ts",
+    "./MyError": "./src/types/error.type.ts"
   }
 }

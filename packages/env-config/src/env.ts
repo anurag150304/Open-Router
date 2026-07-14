@@ -18,6 +18,9 @@ const envSchema = z.object({
   POSTGRES_DB: z.string().default("OpenRouter"),
   JWT_SECRET: z.string().default("Anurag@79201"),
   DATABASE_URL: z.string().url(),
+  GOOGLE_CLOUD_PROJECT: z.string().default("open-router-502315"),
+  GOOGLE_CLOUD_LOCATION: z.string().default("asia-northeast1"),
+  GOOGLE_GENAI_USE_VERTEXAI: z.string().transform((val) => val.toLowerCase() === "true").default(true),
 });
 
 export type Env = z.infer<typeof envSchema>;

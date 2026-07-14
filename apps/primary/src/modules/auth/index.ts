@@ -6,13 +6,13 @@ import { jwtPlugin } from "../../plugins/jwt.plugin.js";
 export const user = new Elysia({ prefix: "/user" })
   .use(jwtPlugin)
   .post(
-    "/signup",
+    "/sign-up",
     async ({ body }) => {
       const { name, email, password } = body;
       const userId = await Auth.signup({ name, email, password });
       return {
         message: "User account created sucessfully",
-        userId: userId.toString(),
+        userId: userId,
       };
     },
     {
@@ -21,7 +21,7 @@ export const user = new Elysia({ prefix: "/user" })
     },
   )
   .post(
-    "/signin",
+    "/sign-in",
     async ({ jwt, body, cookie: { auth } }) => {
       const { email, password } = body;
 
@@ -29,7 +29,7 @@ export const user = new Elysia({ prefix: "/user" })
       const value = await jwt.sign({ userId });
 
       auth?.set({
-        value,
+        value: value,
         httpOnly: true,
         maxAge: 7 * 86_400,
         path: "/",
@@ -37,7 +37,7 @@ export const user = new Elysia({ prefix: "/user" })
 
       return {
         message: "Signed In sucessfully",
-        userId: userId.toString(),
+        userId: userId,
       };
     },
     {
@@ -65,7 +65,7 @@ export const user = new Elysia({ prefix: "/user" })
     },
   )
   .post(
-    "/signout",
+    "/sign-out",
     async ({ cookie: { auth } }) => {
       auth?.remove();
       return {

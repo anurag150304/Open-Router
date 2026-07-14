@@ -9,7 +9,7 @@ export const comparePasswrod = async (hashed: string, pass: string) => {
   return await bcrypt.compare(pass, hashed);
 };
 
-const KEY_PREFIX = "sk-or-v1-";
+export const KEY_PREFIX = "sk-or-v1-";
 export const generateKey = () => {
   const randomString = crypto
     .randomBytes(21)

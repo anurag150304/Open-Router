@@ -9,15 +9,21 @@ import { companiesRoute } from "./modules/modelOEMs/index.js";
 import { node } from "@elysia/node";
 import { MyError } from "./types/error.type.js";
 
-const app = new Elysia({ adapter: node() })
+const app = new Elysia({ adapter: node(), prefix: "/primary/v1" })
   .use(
     cors({
-      origin: "http://localhost:5173",
+      origin: "*",
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   )
+  .get("/", () => "Welcome to the Open-ROuter Primary server")
+  .use(userRoute)
+  .use(apiRoute)
+  .use(modelsRoute)
+  .use(providersRoute)
+  .use(companiesRoute)
   .error({ MyError })
   .onError(({ code, error, set }) => {
     if (code === "MyError") {
@@ -39,12 +45,6 @@ const app = new Elysia({ adapter: node() })
       message: "Internal Server Error",
     };
   })
-  .get("/", () => "Hello Elysia")
-  .use(userRoute)
-  .use(apiRoute)
-  .use(modelsRoute)
-  .use(providersRoute)
-  .use(companiesRoute)
   .listen(env.PRIMARY_PORT, ({ hostname, port }) => {
     console.log(`Primary server is running at ${hostname}:${port}`);
   });
