@@ -19,7 +19,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().default("Anurag@79201"),
   DATABASE_URL: z.string().url(),
   GOOGLE_CLOUD_PROJECT: z.string().default("open-router-502315"),
-  GOOGLE_CLOUD_LOCATION: z.string().default("asia-northeast1"),
+  GOOGLE_CLOUD_LOCATION: z.string().default("global"),
   GOOGLE_GENAI_USE_VERTEXAI: z
     .string()
     .transform((val) => val.toLowerCase() === "true")

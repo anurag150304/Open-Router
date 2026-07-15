@@ -7,16 +7,14 @@ export const completionsSchema = {
   }),
   bodySchema: t.Object({
     model: t.String(),
-    messages: t.Array(
-      t.Object({
-        role: t.Enum({
-          user: "user",
-          assistant: "assistant",
-          system: "system",
-        }),
-        content: t.String(),
+    messages: t.Object({
+      role: t.Enum({
+        user: "user",
+        assistant: "assistant",
+        system: "system",
       }),
-    ),
+      content: t.String(),
+    }),
   }),
   validationResponse: t.Object({
     message: t.String(),

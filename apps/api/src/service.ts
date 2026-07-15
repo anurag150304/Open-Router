@@ -15,7 +15,9 @@ export class CompletionsService {
   static async LLMCall({ model, messages }: completionsSchema["bodySchema"]) {
     try {
       const llm = createLLMProvider(model);
-      await llm.isHealthy();
+      const response = await llm.complete(messages);
+
+      return response;
     } catch (err) {
       console.error(err);
       throw new Error("Failed to call LLM");

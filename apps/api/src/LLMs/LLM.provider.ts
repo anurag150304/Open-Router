@@ -22,8 +22,7 @@ export class LLMProvider implements LLMSchema {
 
   async isHealthy(): Promise<boolean> {
     try {
-      const list = await this.client.models.list();
-      console.log(JSON.stringify(list));
+      await this.client.models.list();
       return true;
     } catch (error) {
       console.error(error);
@@ -32,13 +31,13 @@ export class LLMProvider implements LLMSchema {
   }
 
   async complete(
-    messages: ChatMessage[],
+    messages: ChatMessage,
     options?: CompletionOptions,
   ): Promise<CompletionResult> {
     try {
       const response = await this.client.models.generateContent({
         model: this.model,
-        contents: messages,
+        contents: messages.content,
         config: {
           temperature: options?.temperature ?? 0.3,
         },
@@ -63,14 +62,14 @@ export class LLMProvider implements LLMSchema {
   }
 
   async *stream(
-    messages: ChatMessage[],
+    messages: ChatMessage,
     options?: CompletionOptions,
     onUsage?: (usage: NonNullable<CompletionResult["usage"]>) => void,
   ): AsyncGenerator<string> {
     try {
       const stream = await this.client.models.generateContentStream({
         model: this.model,
-        contents: messages,
+        contents: messages.content,
         config: {
           temperature: options?.temperature ?? 0.3,
         },

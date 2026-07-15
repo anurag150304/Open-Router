@@ -48,12 +48,29 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
       }
 
       try {
-        await CompletionsService.LLMCall(body);
-      } catch (err) {}
-      set.status = "OK";
-      return {
-        message: "Testing",
-      };
+        const { model, messages } = body
+        const res = await CompletionsService.LLMCall({ model, messages });
+        set.status = "OK";
+        return {
+          model,
+          choices: [{
+            message: {
+              role: "assistant",
+              content: res.content
+            },
+            usage: {
+              prompt_tokens: res.usage?.promptTokens || 0,
+              completion_tokens: res.usage?.completionTokens || 0,
+              total_tokens: res.usage?.totalTokenCount || 0,
+              cost: 0,
+            },
+          }],
+
+        }
+      } catch (err) {
+        console.error(err);
+        throw new MyError(400, "Failed to generate content");
+      }
     },
     {
       headers: completionsSchema.headerSchema,

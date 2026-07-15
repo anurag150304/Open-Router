@@ -20,11 +20,11 @@ export interface CompletionResult {
 
 export interface LLMSchema {
   complete(
-    messages: ChatMessage[],
+    messages: ChatMessage,
     options?: CompletionOptions,
   ): Promise<CompletionResult>;
   stream(
-    messages: ChatMessage[],
+    messages: ChatMessage,
     options?: CompletionOptions,
   ): AsyncGenerator<string>;
   isHealthy(): Promise<boolean>;
