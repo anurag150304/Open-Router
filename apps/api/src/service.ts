@@ -1,4 +1,4 @@
-import { createLLMProvider, LLMProvider } from "./LLMs/LLM.provider.js";
+import { createLLMProvider } from "./LLMs/LLM.provider.js";
 import { completionsSchema } from "./model.js";
 import { apiDB } from "@repo/db-config";
 
