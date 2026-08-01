@@ -39,7 +39,7 @@ export const API_Model = {
     key: t.String(),
   }),
   deleteKeyResponse: t.Object({
-    message: t.String()
+    message: t.String(),
   }),
 };
 

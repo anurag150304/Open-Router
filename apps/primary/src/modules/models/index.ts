@@ -30,4 +30,4 @@ export const modelsRoute = new Elysia({ prefix: "/models" })
     {
       response: modelSchema.allModelsResponse,
     },
-  )
+  );

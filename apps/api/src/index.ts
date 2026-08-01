@@ -42,10 +42,7 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
       } catch (err) {
         if (err instanceof MyError) throw err;
         console.error("Key validation error:", err);
-        throw new MyError(
-          401,
-          "Failed to validate your API key.",
-        );
+        throw new MyError(401, "Failed to validate your API key.");
       }
 
       // Check user credits before processing request
@@ -56,7 +53,11 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
         let usage: NonNullable<CompletionResult["usage"]> | null = null;
 
         if (!stream) {
-          const res = await CompletionsService.chatCompletion({ model, messages, options });
+          const res = await CompletionsService.chatCompletion({
+            model,
+            messages,
+            options,
+          });
           if (res.usage) usage = res.usage;
 
           const promptTokens = usage?.promptTokens || 0;
@@ -93,20 +94,26 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
         const readable = new ReadableStream({
           async start(controller) {
             try {
-              for await (const chunk of CompletionsService.chatCompletionStream({
-                model,
-                messages,
-                options,
-                onUsage: (u) => (usage = u),
-              })) {
+              for await (const chunk of CompletionsService.chatCompletionStream(
+                {
+                  model,
+                  messages,
+                  options,
+                  onUsage: (u) => (usage = u),
+                },
+              )) {
                 controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ text: chunk })}\n\n`)
+                  encoder.encode(
+                    `data: ${JSON.stringify({ text: chunk })}\n\n`,
+                  ),
                 );
               }
 
               if (usage) {
                 controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ usage, done: true })}\n\n`)
+                  encoder.encode(
+                    `data: ${JSON.stringify({ usage, done: true })}\n\n`,
+                  ),
                 );
 
                 const promptTokens = usage.promptTokens || 0;
@@ -138,16 +145,17 @@ const app = new Elysia({ adapter: node(), prefix: "/api/v1" })
           headers: {
             "Content-Type": "text/event-stream",
             "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
+            Connection: "keep-alive",
           },
         });
-
       } catch (err) {
         console.error("Chat completion route error:", err);
         if (err instanceof MyError) throw err;
         throw new MyError(
           500,
-          err instanceof Error ? err.message : "An error occurred while generating completion."
+          err instanceof Error
+            ? err.message
+            : "An error occurred while generating completion.",
         );
       }
     },

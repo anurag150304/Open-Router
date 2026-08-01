@@ -5,7 +5,8 @@ export async function signup(payload: {
   email: string;
   password: string;
 }) {
-  const { data, error } = await service.primary.v1.user["sign-up"].post(payload);
+  const { data, error } =
+    await service.primary.v1.user["sign-up"].post(payload);
   if (error) {
     const errMsg =
       (error.value as any)?.message || "Signup failed. Please try again.";
@@ -15,7 +16,8 @@ export async function signup(payload: {
 }
 
 export async function signin(payload: { email: string; password: string }) {
-  const { data, error } = await service.primary.v1.user["sign-in"].post(payload);
+  const { data, error } =
+    await service.primary.v1.user["sign-in"].post(payload);
   if (error) {
     const errMsg =
       (error.value as any)?.message || "Signin failed. Invalid credentials.";

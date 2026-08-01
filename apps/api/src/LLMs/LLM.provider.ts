@@ -48,7 +48,10 @@ export class LLMProvider implements LLMSchema {
         throw new MyError(500, "LLM provider returned an empty response.");
       }
 
-      let { promptTokens, completionTokens } = { promptTokens: 0, completionTokens: 0 };
+      let { promptTokens, completionTokens } = {
+        promptTokens: 0,
+        completionTokens: 0,
+      };
       promptTokens += response.usageMetadata?.promptTokenCount || 0;
       completionTokens += response.usageMetadata?.candidatesTokenCount || 0;
 
@@ -63,7 +66,8 @@ export class LLMProvider implements LLMSchema {
     } catch (err) {
       console.error("LLM Provider completion error:", err);
       if (err instanceof MyError) throw err;
-      const msg = err instanceof Error ? err.message : "Failed to generate content.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to generate content.";
       throw new MyError(500, `LLM completion failed: ${msg}`);
     }
   }
@@ -82,7 +86,10 @@ export class LLMProvider implements LLMSchema {
         },
       });
 
-      let { promptTokens, completionTokens } = { promptTokens: 0, completionTokens: 0 };
+      let { promptTokens, completionTokens } = {
+        promptTokens: 0,
+        completionTokens: 0,
+      };
 
       for await (const chunk of stream) {
         if (chunk.text) yield chunk.text;
@@ -100,7 +107,8 @@ export class LLMProvider implements LLMSchema {
     } catch (err) {
       console.error("LLM Provider streaming error:", err);
       if (err instanceof MyError) throw err;
-      const msg = err instanceof Error ? err.message : "Failed to stream content.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to stream content.";
       throw new MyError(500, `LLM streaming failed: ${msg}`);
     }
   }
@@ -109,4 +117,3 @@ export class LLMProvider implements LLMSchema {
 export function createLLMProvider(model: string): LLMProvider {
   return new LLMProvider(model);
 }
-

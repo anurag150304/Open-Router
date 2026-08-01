@@ -13,7 +13,10 @@ export abstract class Models {
       });
     } catch (err) {
       console.error("Database error retrieving models:", err);
-      throw new MyError(500, "Database error occurred while retrieving models.");
+      throw new MyError(
+        500,
+        "Database error occurred while retrieving models.",
+      );
     }
   }
 
@@ -28,4 +31,3 @@ export abstract class Models {
     }
   }
 }
-

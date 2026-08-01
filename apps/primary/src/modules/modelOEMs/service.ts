@@ -16,7 +16,10 @@ export abstract class CompanyModel {
       });
     } catch (err) {
       console.error("Database error adding new company:", err);
-      throw new MyError(500, "Database error occurred while adding new company.");
+      throw new MyError(
+        500,
+        "Database error occurred while adding new company.",
+      );
     }
   }
 
@@ -25,8 +28,10 @@ export abstract class CompanyModel {
       return await companiesDB.findMany({});
     } catch (err) {
       console.error("Database error retrieving companies:", err);
-      throw new MyError(500, "Database error occurred while retrieving companies.");
+      throw new MyError(
+        500,
+        "Database error occurred while retrieving companies.",
+      );
     }
   }
 }
-

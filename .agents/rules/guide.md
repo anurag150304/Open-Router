@@ -4,7 +4,6 @@ trigger: always_on
 
 # Project Rules & Best Practices
 
-
 ## 1. Project Architecture Awareness
 
 - This is a **pnpm monorepo** managed with **Turborepo**. Always respect workspace boundaries.

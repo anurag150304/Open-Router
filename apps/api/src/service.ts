@@ -40,7 +40,10 @@ export class CompletionsService {
       };
     } catch (err) {
       console.error("Database error while validating key:", err);
-      throw new MyError(500, "Database error occurred while validating API key.");
+      throw new MyError(
+        500,
+        "Database error occurred while validating API key.",
+      );
     }
   }
 
@@ -56,7 +59,10 @@ export class CompletionsService {
       }
 
       if (user.credits <= 0) {
-        throw new MyError(402, "Insufficient credits. Please top up your account.");
+        throw new MyError(
+          402,
+          "Insufficient credits. Please top up your account.",
+        );
       }
 
       return user.credits;
@@ -67,7 +73,11 @@ export class CompletionsService {
     }
   }
 
-  static async chatCompletion({ model, messages, options }: completionsSchema["bodySchema"]): Promise<CompletionResult> {
+  static async chatCompletion({
+    model,
+    messages,
+    options,
+  }: completionsSchema["bodySchema"]): Promise<CompletionResult> {
     try {
       const llm = createLLMProvider(model);
       return await llm.complete(messages, options);
@@ -76,7 +86,9 @@ export class CompletionsService {
       if (err instanceof MyError) throw err;
       throw new MyError(
         500,
-        err instanceof Error ? err.message : "Failed to generate completion content."
+        err instanceof Error
+          ? err.message
+          : "Failed to generate completion content.",
       );
     }
   }
@@ -97,12 +109,18 @@ export class CompletionsService {
       if (error instanceof MyError) throw error;
       throw new MyError(
         500,
-        error instanceof Error ? error.message : "Failed to stream completion content."
+        error instanceof Error
+          ? error.message
+          : "Failed to stream completion content.",
       );
     }
   }
 
-  static async storeConversation({ apiKey, promptTokens, completionTokens }: T_StoreConversations) {
+  static async storeConversation({
+    apiKey,
+    promptTokens,
+    completionTokens,
+  }: T_StoreConversations) {
     try {
       const cleanKey = apiKey.startsWith("Bearer ") ? apiKey.slice(7) : apiKey;
       await conversationsDB.create({
@@ -153,15 +171,13 @@ export class CompletionsService {
   }
 
   static calculateCost(inputTokens: number, outputTokens: number): number {
-    const INPUT_RATE = 0.001;  // credits factor per input token
+    const INPUT_RATE = 0.001; // credits factor per input token
     const OUTPUT_RATE = 0.002; // credits factor per output token
 
-    const rawCost = (inputTokens * INPUT_RATE) + (outputTokens * OUTPUT_RATE);
+    const rawCost = inputTokens * INPUT_RATE + outputTokens * OUTPUT_RATE;
     if (rawCost === 0 && (inputTokens > 0 || outputTokens > 0)) {
       return 1;
     }
     return Math.ceil(rawCost);
   }
 }
-
-
