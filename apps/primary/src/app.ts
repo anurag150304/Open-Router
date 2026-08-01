@@ -4,7 +4,6 @@ import { cors } from "@elysia/cors";
 import { user as userRoute } from "./modules/auth/index.js";
 import { apiRoute } from "./modules/api_key/index.js";
 import { modelsRoute } from "./modules/models/index.js";
-import { providersRoute } from "./modules/providers/index.js";
 import { companiesRoute } from "./modules/modelOEMs/index.js";
 import { node } from "@elysia/node";
 import { MyError } from "./types/error.type.js";
@@ -22,28 +21,44 @@ const app = new Elysia({ adapter: node(), prefix: "/primary/v1" })
   .use(userRoute)
   .use(apiRoute)
   .use(modelsRoute)
-  .use(providersRoute)
   .use(companiesRoute)
   .error({ MyError })
   .onError(({ code, error, set }) => {
-    if (code === "MyError") {
-      set.status = (error as MyError).status;
-      return {
-        message: error.message,
-      };
+    switch (code) {
+      case "MyError": {
+        set.status = (error as MyError).status;
+        return {
+          message: error.message,
+        };
+      }
+      case "VALIDATION": {
+        set.status = 400;
+        return {
+          message: "Validation failed",
+          error: error.message,
+        };
+      }
+      case "NOT_FOUND": {
+        set.status = 404;
+        return {
+          message: "Resource not found",
+        };
+      }
+      case "PARSE": {
+        set.status = 400;
+        return {
+          message: "Malformed JSON payload",
+          error: error.message,
+        };
+      }
+      default: {
+        console.error("Unhandled Primary API error:", error);
+        set.status = 500;
+        return {
+          message: "Internal Server Error",
+        };
+      }
     }
-    if (code === "VALIDATION") {
-      set.status = 400;
-      return {
-        message: "Validation failed",
-        error: error.message,
-      };
-    }
-    console.error("Unhandled error:", error);
-    set.status = 500;
-    return {
-      message: "Internal Server Error",
-    };
   })
   .listen(env.PRIMARY_PORT, ({ hostname, port }) => {
     console.log(`Primary server is running at ${hostname}:${port}`);

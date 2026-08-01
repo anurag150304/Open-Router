@@ -6,8 +6,10 @@ export const companiesRoute = new Elysia({ prefix: "/companies" })
   .post(
     "/new",
     async ({ body, set }) => {
-      const { name, website } = body;
-      const company = await CompanyModel.addNewCompany({ name, website });
+      const company = await CompanyModel.addNewCompany({
+        name: body.name,
+        website: body.website ?? "",
+      });
       set.status = "Created";
       return {
         message: "Company added successfully",

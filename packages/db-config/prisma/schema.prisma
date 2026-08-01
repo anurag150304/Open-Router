@@ -7,19 +7,18 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @unique @default(autoincrement())
-  name          String
-  email         String          @unique
-  password      String
-  credits       Int             @default(0)
-  createdAt     DateTime        @default(now())
-  api_keys      API_Key[]
-  conversations Conversations[]
-  transactions  Transactions[]
+  id           Int            @id @unique @default(autoincrement())
+  name         String
+  email        String         @unique
+  password     String
+  credits      Int            @default(0)
+  createdAt    DateTime       @default(now())
+  api_keys     API_Key[]
+  transactions Transactions[]
 }
 
 model API_Key {
-  id          String          @id @unique @default(uuid())
+  id          Int             @id @unique @default(autoincrement())
   key         String          @unique
   key_name    String
   active      Boolean         @default(true)
@@ -30,54 +29,27 @@ model API_Key {
   generations Conversations[]
 }
 
-model Companies {
-  id        String   @id @unique @default(uuid())
-  name      String   @unique
-  website   String   @unique
-  createdAt DateTime @default(now())
-  models    Models[]
-}
-
-model Providers {
-  id             String           @id @unique @default(uuid())
-  name           String           @unique
-  website        String?          @unique
-  createdAt      DateTime         @default(now())
-  providerModels ModelProviders[]
-}
-
 model Models {
-  id             String           @id @unique @default(uuid())
-  name           String           @unique
-  companyId      String
-  modelProviders ModelProviders[]
-  company        Companies        @relation(fields: [companyId], references: [id])
+  id        String    @id @unique @default(uuid())
+  name      String    @unique
+  companyId String
+  company   Companies @relation(fields: [companyId], references: [id])
 }
 
-model ModelProviders {
-  id               String          @id @unique @default(uuid())
-  modelId          String
-  providerId       String
-  inputToken_cost  Float
-  outputToken_cost Float
-  generations      Conversations[]
-  model            Models          @relation(fields: [modelId], references: [id])
-  provider         Providers       @relation(fields: [providerId], references: [id])
+model Companies {
+  id      String   @id @unique @default(uuid())
+  name    String   @unique
+  website String?
+  model   Models[]
 }
 
 model Conversations {
-  id              Int            @id @unique @default(autoincrement())
-  userId          Int
-  apiKeyId        String
-  modelProviderId String
-  input           String
-  output          String
-  inpTokenCount   Int
-  outTokenCount   Int
-  createdAt       DateTime       @default(now())
-  apiKey          API_Key        @relation(fields: [apiKeyId], references: [id])
-  modelProvider   ModelProviders @relation(fields: [modelProviderId], references: [id])
-  user            User           @relation(fields: [userId], references: [id])
+  id            Int      @id @unique @default(autoincrement())
+  api_key       String
+  inpTokenCount Int
+  outTokenCount Int
+  createdAt     DateTime @default(now())
+  apiKey        API_Key  @relation(fields: [api_key], references: [key])
 }
 
 model Transactions {

@@ -26,21 +26,20 @@ export const API_Model = {
     message: t.Optional(t.String()),
     keys: t.Array(
       t.Object({
+        id: t.Number(),
+        key: t.String(),
         active: t.Boolean(),
         expires_at: t.String(),
-        id: t.String(),
-        key: t.String(),
         key_name: t.String(),
         userId: t.Number(),
       }),
     ),
   }),
-  deleteKeyParam: t.Object({
-    keyId: t.String(),
+  deleteKeyQuery: t.Object({
+    key: t.String(),
   }),
   deleteKeyResponse: t.Object({
-    message: t.String(),
-    keyId: t.Optional(t.String()),
+    message: t.String()
   }),
 };
 

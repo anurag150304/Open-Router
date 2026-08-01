@@ -2,20 +2,19 @@ import { Elysia } from "elysia";
 import { API_Model } from "./model.js";
 import { API } from "./service.js";
 import { jwtPlugin } from "../../plugins/jwt.plugin.js";
+import { MyError } from "../../types/error.type.js";
 
 export const apiRoute = new Elysia({ prefix: "/apikey" })
   .use(jwtPlugin)
-  .resolve(async ({ jwt, cookie: { auth }, set }) => {
+  .resolve(async ({ jwt, cookie: { auth } }) => {
     if (!auth?.value) {
-      set.status = "Unauthorized";
-      throw new Error("Unauthorized");
+      throw new MyError(401, "Unauthorized access. Please log in.");
     }
 
     const decoded = await jwt.verify(auth.value as string);
 
     if (!decoded) {
-      set.status = "Unauthorized";
-      throw new Error("Unauthorized");
+      throw new MyError(401, "Unauthorized access. Invalid auth token.");
     }
 
     return {
@@ -29,11 +28,10 @@ export const apiRoute = new Elysia({ prefix: "/apikey" })
       const key = await API.checkKeyExistence({ userId, keyName });
 
       if (key) {
-        set.status = "Conflict";
-        return {
-          message: `Key with name: ${keyName} already exists. Try to make unique name`,
-          key,
-        };
+        throw new MyError(
+          409,
+          `Key with name '${keyName}' already exists. Please choose a unique name.`,
+        );
       }
 
       const generatedKey = await API.createAPIKey({
@@ -43,7 +41,7 @@ export const apiRoute = new Elysia({ prefix: "/apikey" })
       });
       set.status = "Created";
       return {
-        message: "Key generated sucessfully",
+        message: "Key generated successfully",
         key: generatedKey,
       };
     },
@@ -59,25 +57,20 @@ export const apiRoute = new Elysia({ prefix: "/apikey" })
       const keyExists = await API.checkKeyExistence({ keyName, userId });
 
       if (!keyExists) {
-        set.status = "Not Found";
-        return {
-          message: "key not found!",
-          key: null,
-        };
+        throw new MyError(404, "API key not found.");
       }
 
       const res = await API.updateKey({ keyName, key, userId, updateType });
       if (!res) {
-        set.status = "Conflict";
-        return {
-          message: "Failed to disable the key. Please try again later.",
-          key: null,
-        };
+        throw new MyError(
+          409,
+          `Failed to ${updateType} the API key. Please try again later.`,
+        );
       }
 
       set.status = "OK";
       return {
-        message: `Key sucessfully ${updateType}d`,
+        message: `Key successfully ${updateType}d`,
         key: res,
       };
     },
@@ -98,25 +91,24 @@ export const apiRoute = new Elysia({ prefix: "/apikey" })
     },
   )
   .delete(
-    "/remove/:keyId",
-    async ({ params, set }) => {
-      const { keyId } = params;
-      const res = await API.deleteAPIKey({ keyId });
+    "/remove",
+    async ({ query, set }) => {
+      const { key } = query;
+      const res = await API.deleteAPIKey({ key });
       if (!res) {
-        set.status = "Conflict";
-        return {
-          message: "Something went wrong! While deleting key",
-        };
+        throw new MyError(
+          409,
+          "Failed to delete API key. Key not found or already deleted.",
+        );
       }
 
       set.status = "OK";
       return {
-        message: "Key deleted sucessfully",
-        keyId,
+        message: "Key deleted successfully",
       };
     },
     {
-      params: API_Model.deleteKeyParam,
+      query: API_Model.deleteKeyQuery,
       response: API_Model.deleteKeyResponse,
     },
   );

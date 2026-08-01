@@ -20,7 +20,7 @@
     "@repo/env-config": "workspace:*",
     "@sinclair/typebox": "^0.34.50",
     "bcrypt": "^6.0.0",
-    "elysia": "^1.4.29",
+    "elysia": "1.4.29",
     "openapi-types": "^12.1.3"
   },
   "devDependencies": {

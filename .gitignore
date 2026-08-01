@@ -4,6 +4,7 @@ node_modules/
 **/node_modules/
 .pnp
 .pnp.js
+.DS_Store
 
 # testing
 coverage
@@ -60,3 +61,6 @@ node_modules/.cache
 
 # ts-build
 **/*.tsbuildinfo   
+
+# React Router
+**/.react-router/

@@ -15,6 +15,12 @@ export const completionsSchema = {
       }),
       content: t.String(),
     }),
+    options: t.Optional(t.Object({
+      temperature: t.Number(),
+      maxTokens: t.Number(),
+      jsonMode: t.Boolean(),
+    })),
+    stream: t.Optional(t.Boolean())
   }),
   validationResponse: t.Object({
     message: t.String(),

@@ -3,7 +3,7 @@ import { t, type UnwrapSchema } from "elysia";
 export const companySchema = {
   newCompanyBody: t.Object({
     name: t.String({ error: "Company name is required!" }),
-    website: t.String({ error: "Company website is required!" }),
+    website: t.Optional(t.String()),
   }),
 
   newCompanyResponse: t.Object({

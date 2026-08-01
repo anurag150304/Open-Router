@@ -6,6 +6,7 @@ import type {
 } from "./LLM.schema.js";
 import { GoogleGenAI } from "@google/genai";
 import { env } from "@repo/env-config";
+import { MyError } from "primary/MyError";
 
 export class LLMProvider implements LLMSchema {
   private readonly client: GoogleGenAI;
@@ -25,8 +26,8 @@ export class LLMProvider implements LLMSchema {
       await this.client.models.list();
       return true;
     } catch (error) {
-      console.error(error);
-      throw new Error("Model is not healthy");
+      console.error("LLM Provider health check failed:", error);
+      throw new MyError(503, "LLM provider service is currently unavailable.");
     }
   }
 
@@ -44,20 +45,26 @@ export class LLMProvider implements LLMSchema {
       });
 
       if (!response.text) {
-        throw new Error("Failed to generate content");
+        throw new MyError(500, "LLM provider returned an empty response.");
       }
+
+      let { promptTokens, completionTokens } = { promptTokens: 0, completionTokens: 0 };
+      promptTokens += response.usageMetadata?.promptTokenCount || 0;
+      completionTokens += response.usageMetadata?.candidatesTokenCount || 0;
 
       return {
         content: response.text,
         usage: {
-          promptTokens: response.usageMetadata?.promptTokenCount || 0,
-          completionTokens: response.usageMetadata?.candidatesTokenCount || 0,
-          totalTokenCount: response.usageMetadata?.totalTokenCount || 0,
+          promptTokens,
+          completionTokens,
+          totalTokenCount: promptTokens + completionTokens,
         },
       };
     } catch (err) {
-      console.error(err);
-      throw new Error("Failed to generate content");
+      console.error("LLM Provider completion error:", err);
+      if (err instanceof MyError) throw err;
+      const msg = err instanceof Error ? err.message : "Failed to generate content.";
+      throw new MyError(500, `LLM completion failed: ${msg}`);
     }
   }
 
@@ -75,19 +82,26 @@ export class LLMProvider implements LLMSchema {
         },
       });
 
+      let { promptTokens, completionTokens } = { promptTokens: 0, completionTokens: 0 };
+
       for await (const chunk of stream) {
         if (chunk.text) yield chunk.text;
 
-        if (chunk.usageMetadata)
+        if (chunk.usageMetadata) {
+          promptTokens += chunk.usageMetadata.promptTokenCount || 0;
+          completionTokens += chunk.usageMetadata.candidatesTokenCount || 0;
           onUsage?.({
-            promptTokens: chunk.usageMetadata.promptTokenCount || 0,
-            completionTokens: chunk.usageMetadata.candidatesTokenCount || 0,
-            totalTokenCount: chunk.usageMetadata.totalTokenCount || 0,
+            promptTokens,
+            completionTokens,
+            totalTokenCount: promptTokens + completionTokens,
           });
+        }
       }
     } catch (err) {
-      console.error(err);
-      throw new Error("Failed to generate content");
+      console.error("LLM Provider streaming error:", err);
+      if (err instanceof MyError) throw err;
+      const msg = err instanceof Error ? err.message : "Failed to stream content.";
+      throw new MyError(500, `LLM streaming failed: ${msg}`);
     }
   }
 }
@@ -95,3 +109,4 @@ export class LLMProvider implements LLMSchema {
 export function createLLMProvider(model: string): LLMProvider {
   return new LLMProvider(model);
 }
+

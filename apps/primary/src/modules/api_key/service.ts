@@ -1,16 +1,22 @@
 import { generateKey } from "../../utils/index.js";
 import { API_Model } from "./model.js";
 import { apiDB } from "@repo/db-config";
+import { MyError } from "../../types/error.type.js";
 
 export abstract class API {
   static async checkKeyExistence({
     keyName,
     userId,
   }: Omit<API_Model["keyCreationBody"], "expiresOn"> & { userId: number }) {
-    const existKey = await apiDB.findFirst({
-      where: { key_name: keyName, userId },
-    });
-    return existKey?.key;
+    try {
+      const existKey = await apiDB.findFirst({
+        where: { key_name: keyName, userId },
+      });
+      return existKey?.key;
+    } catch (err) {
+      console.error("Database error checking key existence:", err);
+      throw new MyError(500, "Database error checking API key existence.");
+    }
   }
 
   static async createAPIKey({
@@ -31,7 +37,8 @@ export abstract class API {
       });
       return apiKey.key;
     } catch (err) {
-      throw err;
+      console.error("Database error creating API key:", err);
+      throw new MyError(500, "Database error creating new API key.");
     }
   }
 
@@ -52,32 +59,44 @@ export abstract class API {
       });
       return updatedKey.key;
     } catch (err) {
-      throw err;
+      console.error("Database error updating API key:", err);
+      throw new MyError(500, "Database error updating API key.");
     }
   }
 
   static async getAllUserKeys({ userId }: { userId: number }) {
-    return apiDB.findMany({
-      where: {
-        userId,
-        deleted: false,
-      },
-      select: {
-        id: true,
-        key_name: true,
-        key: true,
-        userId: true,
-        active: true,
-        expires_at: true,
-      },
-    });
+    try {
+      return await apiDB.findMany({
+        where: {
+          userId,
+          deleted: false,
+        },
+        select: {
+          id: true,
+          key_name: true,
+          key: true,
+          userId: true,
+          active: true,
+          expires_at: true,
+        },
+      });
+    } catch (err) {
+      console.error("Database error retrieving user API keys:", err);
+      throw new MyError(500, "Database error retrieving user API keys.");
+    }
   }
 
-  static async deleteAPIKey({ keyId }: API_Model["deleteKeyParam"]) {
-    const res = await apiDB.updateMany({
-      where: { id: keyId },
-      data: { deleted: true },
-    });
-    return Boolean(res.count);
+  static async deleteAPIKey({ key }: API_Model["deleteKeyQuery"]) {
+    try {
+      const res = await apiDB.updateMany({
+        where: { key },
+        data: { deleted: true },
+      });
+      return Boolean(res.count);
+    } catch (err) {
+      console.error("Database error deleting API key:", err);
+      throw new MyError(500, "Database error deleting API key.");
+    }
   }
 }
+

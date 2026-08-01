@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import { AuthModel } from "./model.js";
 import { Auth } from "./service.js";
 import { jwtPlugin } from "../../plugins/jwt.plugin.js";
+import { MyError } from "../../types/error.type.js";
 
 export const user = new Elysia({ prefix: "/user" })
   .use(jwtPlugin)
@@ -49,11 +50,11 @@ export const user = new Elysia({ prefix: "/user" })
     "/me",
     async ({ jwt, cookie: { auth } }) => {
       if (!auth?.value) {
-        throw new Error("Unauthorized");
+        throw new MyError(401, "Unauthorized access. Please log in.");
       }
       const decoded = await jwt.verify(auth.value as string);
       if (!decoded) {
-        throw new Error("Unauthorized");
+        throw new MyError(401, "Unauthorized access. Invalid auth token.");
       }
       const userDetails = await Auth.getMe(decoded.userId as string);
       return {
@@ -64,7 +65,7 @@ export const user = new Elysia({ prefix: "/user" })
       response: { 200: AuthModel.meResponse },
     },
   )
-  .post(
+  .get(
     "/sign-out",
     async ({ cookie: { auth } }) => {
       auth?.remove();
